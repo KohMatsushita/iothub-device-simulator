@@ -20,6 +20,8 @@ namespace IoTHubDeviceSimulator
         private static Random _random = new Random();
         static async Task Main(string[] args)
         {
+            Console.WriteLine("IoTHubDeviceSimulator is started.");
+
             // parse args
             var rootCommand = new RootCommand("Azure IoT Hub device simulation app.")
             {
@@ -38,6 +40,10 @@ namespace IoTHubDeviceSimulator
             };
             rootCommand.Handler = CommandHandler.Create<string, uint, bool>(ConvertArgs);
             await rootCommand.InvokeAsync(args);
+
+            Console.WriteLine($"ConnectionString:{_connectionString}");
+            Console.WriteLine($"Send Interval:{_sendInterval}");
+            Console.WriteLine($"Logging:{_logging}");
 
             // check args
             if(string.IsNullOrEmpty(_connectionString))
