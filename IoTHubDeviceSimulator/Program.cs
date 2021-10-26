@@ -58,6 +58,7 @@ namespace IoTHubDeviceSimulator
             }
 
             // connect to IoT Hub
+            Console.WriteLine("Connect to IoT Hub.");
             try
             {
                 _deviceClient = DeviceClient.CreateFromConnectionString(_connectionString);
@@ -69,6 +70,8 @@ namespace IoTHubDeviceSimulator
                 return;
             }
 
+            // set timer event
+            Console.WriteLine("Set timer event.");
             var timer = new System.Timers.Timer(_sendInterval);
             timer.Elapsed += async (sender, e) => {
                 var telemetry = new Telemetry
@@ -104,6 +107,8 @@ namespace IoTHubDeviceSimulator
 
             timer.Stop();
             timer.Dispose();
+            
+            Console.WriteLine("IoTHubDeviceSimulator is completed.");
         }
 
         private static void ConvertArgs(string connectionString, uint sendInterval = 5000, bool logging = false)
