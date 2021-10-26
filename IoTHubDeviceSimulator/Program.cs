@@ -37,16 +37,21 @@ namespace IoTHubDeviceSimulator
                 )
             };
             rootCommand.Handler = CommandHandler.Create<string, uint, bool>(ConvertArgs);
-            try
+            await rootCommand.InvokeAsync(args);
+
+            // check args
+            if(string.IsNullOrEmpty(_connectionString))
             {
-                await rootCommand.InvokeAsync(args);
+                Console.WriteLine("Connection string must be setted.");
+                return;
             }
-            catch(Exception e)
+            if(_sendInterval < 1000)
             {
-                Console.WriteLine($"{e.Message}");
+                Console.WriteLine("Send interval is too short (over 1000).");
                 return;
             }
 
+            // connect to IoT Hub
             try
             {
                 _deviceClient = DeviceClient.CreateFromConnectionString(_connectionString);
@@ -97,14 +102,6 @@ namespace IoTHubDeviceSimulator
 
         private static void ConvertArgs(string connectionString, uint sendInterval = 5000, bool logging = false)
         {
-            if(string.IsNullOrEmpty(connectionString))
-            {
-                throw new Exception("Connection string must be setted.");
-            }
-            if(sendInterval < 1000)
-            {
-                throw new Exception("Send interval is too short (over 1000).");
-            }
             _connectionString = connectionString;
             _sendInterval = sendInterval;
             _logging = logging;
