@@ -47,6 +47,17 @@ namespace IoTHubDeviceSimulator
                 return;
             }
 
+            try
+            {
+                _deviceClient = DeviceClient.CreateFromConnectionString(_connectionString);
+                await _deviceClient.OpenAsync();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Connection error:{e}");
+                return;
+            }
+
             var timer = new System.Timers.Timer(_sendInterval);
             timer.Elapsed += async (sender, e) => {
                 var telemetry = new Telemetry
